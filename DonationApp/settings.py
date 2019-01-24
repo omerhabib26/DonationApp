@@ -52,10 +52,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'DonationApp.urls'
 
+AUTH_USER_MODEL = 'accounts.Financer'
+# AUTHENTICATION_BACKENDS = ('accounts.backends.FinancerAuth',)
+AUTHENTICATION_BACKENDS = ('accounts.backends.FinancerAuth', 'django.contrib.auth.backends.ModelBackend',)
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['DonationApp/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,3 +123,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

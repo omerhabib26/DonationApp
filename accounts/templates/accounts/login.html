@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    {% extends 'base.html' %}
+</head>
+<body>
+{% block content %}
+<h2>Login</h2>
+
+{% if form.errors %}
+ <strong style="color:red;">Invalid Login Details {{ form.errors.as_data}}</strong>
+{% endif %}
+<form action="{% url 'accounts:login' %}" method="POST">
+
+  {% csrf_token %}
+
+  {{ form.as_p }}
+  <input class="btn btn-primary" type="submit" value="Login!"/>
+</form>
+
+{% endblock %}
+</body>
+</html>
