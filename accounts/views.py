@@ -1,8 +1,7 @@
+from .models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .models import Financer, Consumer
-from django.utils import timezone
-from .forms import SignUp, LoginForm, FinancerForm, ConsumerForm
+from .forms import CustomUserCreationForm, LoginForm
 from django.contrib import auth
 from django.contrib.auth import authenticate
 
@@ -12,54 +11,28 @@ def index(request):
 
 
 def signup(request):
-    if request.method == 'POST':
-        form = SignUp(request.POST)
-
-        # if form.is_valid():
-        #     return redirect('accounts:index')
-
-        if request.POST['password'] == request.POST['password2']:
-            if request.POST['type'] == 'financer':
-                try:
-                    financer = Financer.objects.get(username=request.POST['username'])
-                    return render(request, 'accounts/signup.html', {'error': 'Username has already been taken'})
-                except Financer.DoesNotExist:
-                    try:
-                        financer = Financer.objects.get(email=request.POST['email'])
-                        return render(request, 'accounts/signup.html',
-                                      {'error': 'Email is already associated with another account'})
-                    except Financer.DoesNotExist:
-                        financer = FinancerForm(request.POST, files=request.FILES)
-
-                        if financer.is_valid():
-                            user = financer.save(commit=False)
-                            user.set_password(request.POST['password'])
-                            user.save()
-                            return redirect('accounts:index')
-                        else:
-                            return render(request, 'accounts/signup.html', {'form': form})
-
-            elif request.POST['type'] == 'consumer':
-                try:
-                    consumer = Consumer.objects.get(username=request.POST['username'])
-                    return render(request, 'accounts/signup.html', {'error': 'Username has already been taken'})
-                except Consumer.DoesNotExist:
-                    try:
-                        consumer = Consumer.objects.get(email=request.POST['email'])
-                        return render(request, 'accounts/signup.html',
-                                      {'error': 'Email is already associated with another account'})
-                    except Consumer.DoesNotExist:
-                        consumer = ConsumerForm(request.POST, files=request.FILES)
-
-                        if consumer.is_valid():
-                            consumer.save()
-                            return redirect('accounts:index')
-                        else:
-                            return render(request, 'accounts/signup.html', {'form': form})
-        else:
-            return render(request, 'accounts/signup.html', {'error': 'Password does not matched'})
+    form = CustomUserCreationForm(request.POST or None)
+    if form.is_valid():
+        try:
+            user = User.objects.get(username=form.cleaned_data.get('username'))
+            return render(request, 'accounts/signup.html', {'form': form})
+        except User.DoesNotExist:
+            try:
+                user = User.objects.get(email=form.cleaned_data.get('email'))
+                return render(request, 'accounts/signup.html',
+                              {'form': form})
+            except User.DoesNotExist:
+                new_user = form.save(commit=False)
+                new_user.save()
+                new_user = authenticate(username=form.cleaned_data.get('username'),
+                                        password=form.cleaned_data.get('password1'))
+                auth.login(request, new_user)
+                if new_user.is_authenticated:
+                    return redirect('accounts:index', )
+                else:
+                    return HttpResponse('Login Failed')
     else:
-        return render(request, 'accounts/signup.html', )
+        return render(request, 'accounts/signup.html', {'form': form})
 
 
 def login(request):
@@ -69,9 +42,9 @@ def login(request):
             # user = Financer.objects.get(email=form.cleaned_data.get('email'))
             # user.check_password(form.cleaned_data['password'])
             # user = authenticate(email=form.cleaned_data['email'], password=form.cleaned_data['password'])
-            email = form.cleaned_data.get('email')
+            username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            user = auth.authenticate(email=email, password=password)
+            user = authenticate(username=username, password=password)
 
             if user is not None:
                 auth.login(request, user)

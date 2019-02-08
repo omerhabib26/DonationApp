@@ -14,73 +14,10 @@
 <h5 style="color:red;">{{ error }}</h5>
 <br>
 {% endif %}
-<form action="{% url 'accounts:signup' %}" method="POST" enctype="multipart/form-data">
+<form action="{% url 'accounts:signup' %}" method="POST">
 
   {% csrf_token %}
-    Select Account Type:
-    <br>
-    <input type="radio"  name="type" value="financer" checked="True"> Financer
-    <input type="radio"  name="type" value="consumer"> Consumer
-    <br>
-    Username:
-    <br>
-    <input type="text" name="username"  required/>
-    <br>
-    Email:
-    <br>
-    <input type="email" name="email" required/>
-    <br>
-    Password:
-    <br>
-    <input type="password" name="password" required/>
-    <br>
-    Confirm Password:
-    <br>
-    <input type="password" name="password2" required/>
-    <br>
-    Profile Pic
-    <br>
-    <input type="file" name="profile_pic" required/>
-    <br>
-    First Name:
-    <br>
-    <input type="text" name="first_name" required/>
-    <br>
-    Last Name:
-    <br>
-    <input type="text" name="last_name" required/>
-    <br>
-    Gender:
-    <br>
-    <input type="radio"  name="gender" value="M" checked="True"> Male
-    <input type="radio"  name="gender" value="F"> Female
-    <br>
-    Date of Birth:
-    <br>
-    <input type="date" name="date_of_birth" required>
-    <br>
-    Mobile No:
-    <br>
-    <input type="tel" name="mobile" required>
-    <br>
-    Address:
-    <br>
-    <input type="text" name="address" required/>
-    <br>
-    City:
-    <br>
-    <input type="text" name="city" required/>
-    <br>
-    State:
-    <br>
-    <input type="text" name="state" required/>
-    <br>
-    Country:
-    <br>
-    <input type="text" name="country" required/>
-    <br>
-    <br>
-    <br>
+    {{ form.as_p }}
     <input class="btn btn-primary" type="submit" value="Sign Up!"/>
 </form>
 

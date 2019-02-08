@@ -3,8 +3,7 @@
 {% block content %}
 <h2>Welcome</h2>
 {% csrf_token %}
- {% if user.is_authenticated %}
+{% if user.is_authenticated %}
 <h2>{{ user.get_full_name }}</h2>
-<h3>User is Authenticated</h3>
 {% endif %}
 {% endblock %}

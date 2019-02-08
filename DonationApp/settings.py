@@ -51,10 +51,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'DonationApp.urls'
-
-AUTH_USER_MODEL = 'accounts.Financer'
-# AUTHENTICATION_BACKENDS = ('accounts.backends.FinancerAuth',)
-AUTHENTICATION_BACKENDS = ('accounts.backends.FinancerAuth', 'django.contrib.auth.backends.ModelBackend',)
+#
+AUTH_USER_MODEL = 'accounts.User'
+# # AUTHENTICATION_BACKENDS = ('accounts.backends.FinancerAuth',)
+AUTHENTICATION_BACKENDS = ('accounts.backends.CustomAccountAuth',)
 
 TEMPLATES = [
     {

@@ -1,21 +1,21 @@
-from .models import Financer
+from .models import User
 
 
-class FinancerAuth(object):
+class CustomAccountAuth(object):
 
-    def authenticate(self, request, email=None, password=None):
+    def authenticate(self, request, username=None, password=None):
         try:
-            user = Financer.objects.get(email=email)
+            user = User.objects.get(username=username)
             if user.check_password(password):
                 return user
-        except Financer.DoesNotExist:
+        except User.DoesNotExist:
             return None
 
-    def get_user(self, user_id):
+    def get_user(self, username):
         try:
-            user = Financer.objects.get(email=user_id)
+            user = User.objects.get(username=username)
             if user.is_active:
                 return user
             return None
-        except Financer.DoesNotExist:
+        except User.DoesNotExist:
             return None
